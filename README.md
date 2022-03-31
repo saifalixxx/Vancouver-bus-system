@@ -1,2 +1,2 @@
 # Algorithms-project
-<"Hello World">
+Senior Fresh, semster 2 
