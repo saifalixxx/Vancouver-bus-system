@@ -1,2 +1,2 @@
 # Algorithms-project
-Senior Fresh, semster 2 
+Senior fresh, Semster 2 
