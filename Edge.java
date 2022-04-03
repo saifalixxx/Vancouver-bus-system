@@ -1,4 +1,4 @@
-// Sets up direct edges and vertices to allow the class to tack Q1 and also Q2 on the paper
+// Sets up direct edges and vertices to allow the class to tackle Q1 and also Q2 on the paper
 
 import java.util.Iterator;
 
@@ -72,7 +72,7 @@ class costOfGrid
         VAR++;
 
     }
-/*
+
     public Iterable<costOfEdge> diE(int var)
     {
         return diE[var];
@@ -88,7 +88,7 @@ class costOfGrid
         return VAR;
     }
 
-} */
+}
 
 // Allows me to paste immutable data-only classes.
 record costOfEdge(int var, int tempVar, double cost)
