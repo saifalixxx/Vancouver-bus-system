@@ -72,7 +72,7 @@ class costOfGrid
         VAR++;
 
     }
-
+/*
     public Iterable<costOfEdge> diE(int var)
     {
         return diE[var];
@@ -88,7 +88,7 @@ class costOfGrid
         return VAR;
     }
 
-}
+} */
 
 // Allows me to paste immutable data-only classes.
 record costOfEdge(int var, int tempVar, double cost)
