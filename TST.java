@@ -1,95 +1,139 @@
+/*Searching for a bus stop by full name or by the first few characters in the name, using a
+ ternary search tree (TST), returning the full stop information for each stop matching the
+ search criteria (which can be zero, one or more stops) */
+
+// Reference: https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/TST.html
+
 // Importing libraries
-import org.w3c.dom.Node;
-
-import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.List;
 
-
-public class TST
+public class TST<search>
 {
-    private final static int TOTAL_STOPS = 10;
-    private boolean ifEnded;
-    private Node branch;
+    private newNode<search> branch;
+    private List<search> characters;
 
-
-    public static void registerArray(ArrayList<String> newList)
+    private class newNode<search>
     {
-        for (String s : newList) {
-            System.out.println(s);
+        public char newString;
+        public search number;
+        public newNode<search> directionL;  // Left
+        public newNode<search> directionR; // Right
+        public newNode<search> directionC; // Centre
+
+        public newNode()
+        {
+            this.directionL = null;
+            this.directionR = null;
+            this.directionC = null;
         }
     }
 
-    TST(String folder)
+    private void lookForNo(newNode<search> var)
     {
-        branch = null;
-        File newFolder = new File(folder);
+        if (var == null) {
+            return;
+        }
+        lookForNo(var.directionL);
+        lookForNo(var.directionC);
+        lookForNo(var.directionR);
 
-        try
+        if(var.number != null)
         {
-            Scanner scan = new Scanner(newFolder);
-            String nL = "";
+            characters.add(var.number);
+        }
+    }
 
-            while(scan.hasNextLine())
-            {
-                nL = scan.nextLine();
-                Scanner newScan = new Scanner(nL);
-                newScan.useDelimiter(",");
-                String [] station = new String[TOTAL_STOPS];
-
-                for(int count = 0; count < TOTAL_STOPS; count++)
-                {
-                    if(!newScan.hasNext()) {
-                        break;
-                    }
-                        station[count] = newScan.next();
-                }
-
-                String titleSt = station[2];
-                String title = titleSt.substring(0,2);
-
-                // Move keywords flagstop, wb, nb, sb, eb from start of the names to the end of the names of the stops
-                if(title.equals("NB") || title.equals("WB") || title.equals("SB") || title.equals("EB"))
-                {
-                    titleSt = titleSt.substring(3).concat(" " + title);
-                }
-
-                stData data = new stData(station);
-                connect(titleSt.toCharArray(), data);
-                newScan.close();
+    // Testing for exceptions and indicating whether the method has been passed as an illegal argument
+    public List<search> receive(String ans)
+    {
+        if (ans != null) {
+            if (ans.length() == 0) {
+                throw new IllegalArgumentException("Key has to be greater than or equal to 1");
             }
-            scan.close();
-        }
-        catch (FileNotFoundException error)
-        {
-            error.printStackTrace();
-        }
-    }
 
-    private void connect(char [] stID, stData data)
-    {
-        if(stID.length != 0)
-        {
-            if(branch == null)
-            {
-                branch = new Node(stID[0], -1);
-                ifEnded = false;
-                connect(stID, 0, branch, data);
+            newNode<search> var = receive(branch, ans, 0);
+
+            if (var == null) {
+                return null;
             }
+
+            characters = new ArrayList<search>();
+
+            if (var.directionC.number == null) {
+                return characters;
+            }
+            characters.add(var.number);
+            lookForNo(var.directionC);
+            return characters;
+        } else {
+            throw new IllegalArgumentException("Key is null");
         }
     }
 
-    private Node connect(char[] stID, int count, Node newNode, stData data)
-    {
-        if(newNode == null)
-        {
-            newNode = new Node(stID[count], -1);
+    private newNode<search> receive(newNode<search> var, String ans, int cmp) {
+        if (var != null) {
+            if (ans.length() == 0) {
+                throw new IllegalArgumentException("Key has to be greater than or equal to 1");
+            }
+
+            char role = ans.charAt(cmp);
+
+            if (role >= var.newString) {
+                if (role > var.newString) {
+                    return receive(var.directionR, ans, cmp);
+                } else {
+                    return var;
+                }
+            } else {
+                return receive(var.directionL, ans, cmp);
+            }
+        } else {
+            return null;
         }
-        if(newNode.ans < stID[count])
-        {
-            newNode.l = connect(stID, count, newNode.l, data);
-        }
-        else if()
+
     }
+
+    // Is used to compare to see where to input the node value or what direction it should go in result of this
+    // comparison.
+    private newNode<search> place(newNode<search> var, String ans, search number, int cmp)
+    {
+        char role = ans.charAt(cmp);
+
+        if (var != null) {
+        } else {
+            var = new newNode<search>();
+            var.newString = role;
+        }
+
+        if (role >= var.newString) {
+            if(role > var.newString)
+            {
+                var.directionR = place(var.directionR, ans, number, cmp);
+            }
+            else if(cmp < ans.length() - 1)
+            {
+                var.directionC = place(var.directionC, ans, number, cmp + 1);
+            }
+            else
+            {
+                var.number = number;
+            }
+        } else {
+            var.directionL = place(var.directionL, ans, number, cmp);
+        }
+
+        return var;
+    }
+
+    public void place(String ans, search number)
+    {
+        if (ans != null) {
+            branch = place(branch, ans, number, 0);
+        } else {
+            throw new IllegalArgumentException("Key is null");
+        }
+
+    }
+
 }
