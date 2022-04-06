@@ -1,6 +1,6 @@
 // Reference: https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/IndexMinPQ.java.html
 // Reference: https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/Stack.java.html
-
+// Reference: https://algs4.cs.princeton.edu/44sp/DijkstraSP.java.html
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -187,6 +187,99 @@ class Queue<Object> implements Iterable<Object>
                 return object;
 
         }
+    }
+}
+
+class Dijkstra
+{
+    private double [] distance;
+    private costOfEdge[] edge;
+    private IMPQ<Double> binaryHeap;
+
+    private void ease(costOfEdge edges)
+    {
+        int x = edges.from(), y = edges.to();
+
+        if(distance[y] > distance[x] + edges.cost())
+        {
+            distance[y] = distance[x] + edges.cost();
+            edge[y] = edges;
+
+            if (!binaryHeap.contains(y))
+            {
+                binaryHeap.input(y, distance[y]);
+            }
+            else
+            {
+                binaryHeap.reduce(y, distance[y]);
+            }
+        }
+    }
+
+    public Dijkstra(costOfGrid grid, int x)
+    {
+        distance = new double[grid.TEMP_VAR()];
+        edge = new costOfEdge[grid.TEMP_VAR()];
+
+        int count = 0;
+        while (count < grid.TEMP_VAR())
+        {
+            distance[count] = Double.POSITIVE_INFINITY;
+            count++;
+        }
+        distance[x] = 0.0;
+
+        binaryHeap = new IMPQ<Double>(grid.TEMP_VAR());
+        binaryHeap.input(x, distance[x]);
+
+        if (!binaryHeap.clear())
+        {
+            do {
+                int y = binaryHeap.delete();
+
+                for (Iterator<costOfEdge> iterator = grid.diE(y).iterator(); iterator.hasNext(); )
+                {
+                    costOfEdge c = iterator.next();
+                    ease(c);
+                }
+            } while (!binaryHeap.clear());
+        }
+    }
+
+    public double distance(int x)
+    {
+        return distance[x];
+    }
+
+    public boolean possessRoute(int x)
+    {
+        return distance[x] < Double.POSITIVE_INFINITY;
+    }
+
+    private void acceptApex(int x)
+    {
+        int X = distance.length;
+
+        assert x >= 0 && x < X : "Edge " + x + "must be in the middle of 0 and " + (X - 1);
+    }
+
+    public Iterable<costOfEdge> routeIn(int x)
+    {
+        acceptApex(x);
+
+        if(!possessRoute(x))
+        {
+            return null;
+        }
+
+        Queue<costOfEdge> route = new Queue<costOfEdge>();
+
+        costOfEdge edges = edge[x];
+        while (edges != null) {
+            route.push(edges);
+            edges = edge[edges.from()];
+        }
+        return route;
     }
 }
 
