@@ -1,3 +1,5 @@
+// Reference: https://algs4.cs.princeton.edu/13stacks/Bag.java.html
+// Reference: https://algs4.cs.princeton.edu/44sp/EdgeWeightedDigraph.java.html
 // Sets up direct edges and vertices to allow the class to tackle Q1 and also Q2 on the paper
 
 import java.util.Iterator;

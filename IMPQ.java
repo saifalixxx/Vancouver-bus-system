@@ -5,6 +5,7 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+// Used to implement the Dijkstra's algorithm
 public class IMPQ<Ans extends Comparable<Ans>>
 {
     private int limit;
@@ -190,6 +191,7 @@ class Queue<Object> implements Iterable<Object>
     }
 }
 
+// Algorithim to be used that will find the shortest path
 class Dijkstra
 {
     private double [] distance;
@@ -275,7 +277,8 @@ class Dijkstra
         Queue<costOfEdge> route = new Queue<costOfEdge>();
 
         costOfEdge edges = edge[x];
-        while (edges != null) {
+        while (edges != null)
+        {
             route.push(edges);
             edges = edge[edges.from()];
         }

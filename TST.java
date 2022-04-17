@@ -2,7 +2,7 @@
  ternary search tree (TST), returning the full stop information for each stop matching the
  search criteria (which can be zero, one or more stops) */
 
-// Reference: https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/TST.html
+// Reference: https://algs4.cs.princeton.edu/52trie/TST.java.html
 
 // Importing libraries
 import java.util.ArrayList;
@@ -31,24 +31,49 @@ public class TST<search>
 
     private void lookForNo(newNode<search> var)
     {
-        if (var == null) {
+        if (var == null)
+        {
             return;
         }
         lookForNo(var.directionL);
         lookForNo(var.directionC);
         lookForNo(var.directionR);
 
-        if(var.number != null)
+        if (var.number == null)
         {
-            characters.add(var.number);
+            return;
         }
+        characters.add(var.number);
     }
 
     // Testing for exceptions and indicating whether the method has been passed as an illegal argument
     public List<search> receive(String ans)
     {
-        if (ans != null) {
-            if (ans.length() == 0) {
+        assert ans != null : "Key for receive amounts to 0";
+        switch (ans.length())
+        {
+            case 0 -> throw new IllegalArgumentException("Key has to be greater than or equal to one");
+        }
+
+        newNode<search> var = receive(branch, ans, 0);
+
+        if (var != null)
+        {
+            characters = new ArrayList<search>();
+
+            if (var.directionC.number != null)
+            {
+                characters.add(var.number);
+            }
+            lookForNo(var.directionC);
+
+            return characters;
+
+        /*
+         if (ans != null)
+        {
+            if (ans.length() == 0)
+            {
                 throw new IllegalArgumentException("Key has to be greater than or equal to 1");
             }
 
@@ -68,30 +93,65 @@ public class TST<search>
             return characters;
         } else {
             throw new IllegalArgumentException("Key is null");
+        }*/
+
+        }
+        else
+        {
+            return null;
         }
     }
 
-    private newNode<search> receive(newNode<search> var, String ans, int cmp) {
+    private newNode<search> receive(newNode<search> var, String ans, int cmp)
+    {
         if (var != null) {
-            if (ans.length() == 0) {
-                throw new IllegalArgumentException("Key has to be greater than or equal to 1");
+            switch (ans.length())
+            {
+                case 0 -> throw new IllegalArgumentException("Inputted key must have length >= 1");
             }
 
             char role = ans.charAt(cmp);
 
-            if (role >= var.newString) {
+            if (role >= var.newString)
+            {
+                if(role > var.newString)
+                {
+                    return receive(var.directionR, ans, cmp);
+                }
+                else if (cmp < ans.length() - 1)
+                {
+                    return receive(var.directionC, ans, cmp + 1);
+                }
+                else
+                {
+                    return var;
+                }
+            }
+            else
+            {
+                return receive(var.directionL, ans, cmp);
+            }
+        }
+        else
+        {
+            return null;
+        }
+
+            /*
+
+            if (role < var.newString) {
+                return receive(var.directionL, ans, cmp);
+            } else {
                 if (role > var.newString) {
                     return receive(var.directionR, ans, cmp);
                 } else {
                     return var;
                 }
-            } else {
-                return receive(var.directionL, ans, cmp);
             }
         } else {
             return null;
         }
-
+            */
     }
 
     // Is used to compare to see where to input the node value or what direction it should go in result of this
@@ -106,7 +166,8 @@ public class TST<search>
             var.newString = role;
         }
 
-        if (role >= var.newString) {
+        if (role >= var.newString)
+        {
             if(role > var.newString)
             {
                 var.directionR = place(var.directionR, ans, number, cmp);
@@ -128,9 +189,12 @@ public class TST<search>
 
     public void place(String ans, search number)
     {
-        if (ans != null) {
+        if (ans != null)
+        {
             branch = place(branch, ans, number, 0);
-        } else {
+        }
+        else
+        {
             throw new IllegalArgumentException("Key is null");
         }
 
