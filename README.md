@@ -1,2 +1,2 @@
 #  Data Structures and Algorithms Project
-Senior fresh, Semster 2 
+Senior fresh, Semester 2 
